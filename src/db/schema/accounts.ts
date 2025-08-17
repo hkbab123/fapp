@@ -1,21 +1,22 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { currency, accountType } from "./registry";
+import { ulid } from "ulid";
 
 /** Account (unchanged) **/
 export const account = sqliteTable("account", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull().unique(),
-  type: text("type").notNull().references(() => accountType.code),
-  currencyCode: text("currency_code").notNull().references(() => currency.code),
+  id: text("id").primaryKey().$defaultFn(() => ulid()),  // ← add this
+  name: text("name").notNull(),
+  type: text("type").notNull(),             // e.g. "asset.cash"
+  currencyCode: text("currency_code").notNull(), // e.g. "AED"
   openingBalanceMinor: integer("opening_balance_minor").notNull().default(0),
-  openingDate: text("opening_date"),
+  openingDate: text("opening_date"),        // or integer(...) if you store timestamps
   institutionId: text("institution_id"),
   institutionName: text("institution_name"),
   accountRef: text("account_ref"),
   archived: integer("archived", { mode: "boolean" }).notNull().default(false),
   notes: text("notes"),
-  createdAt: text("created_at").default("now"),
-  updatedAt: text("updated_at").default("now")
+  createdAt: text("created_at").default("CURRENT_TIMESTAMP"),
+  updatedAt: text("updated_at").default("CURRENT_TIMESTAMP"),
 });
 
 /** BankingIdentifiers (unchanged) **/

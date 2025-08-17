@@ -1,24 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
 import { db } from "@/db";
-import { transaction } from "@/db/schema"; // <-- singular export
+import { transaction } from "@/db/schema"; // <-- singular
+import { eq } from "drizzle-orm";
 
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const id = params?.id;
-    if (!id) {
-      return NextResponse.json({ error: "Missing id" }, { status: 400 });
-    }
-
-    await db.delete(transaction).where(eq(transaction.id, id));
+    await db.delete(transaction).where(eq(transaction.id, params.id));
     return NextResponse.json({ ok: true });
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err?.message ?? "Failed to delete transaction" },
-      { status: 500 }
-    );
+  } catch (e: any) {
+    return NextResponse.json({ error: e?.message || "Failed to delete transaction" }, { status: 500 });
   }
 }
