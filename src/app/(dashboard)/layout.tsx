@@ -40,6 +40,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <Link href="/categories" className="rounded-md px-3 py-1.5 text-sm hover:bg-gray-50">
               Manage Categories
             </Link>
+            <Link href="/fx" className="rounded-md px-3 py-1.5 text-sm hover:bg-gray-50">
+              Fx Rate
+            </Link>
           </nav>
         </div>
       </header>
